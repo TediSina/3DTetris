@@ -18,7 +18,7 @@ To set up and run the development server, follow these steps:
 2. **Install Dependencies**
 
     ```bash
-    npm install webpack webpack-cli webpack-dev-server --save-dev  
+    npm install webpack webpack-cli webpack-dev-server --save-dev
     npm install @babylonjs/core @babylonjs/materials
     ```
 
