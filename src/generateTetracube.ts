@@ -2,8 +2,24 @@ import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 import * as Tetracubes from "./createTetracubes";
 
 
+/**
+ * Positions a given array of cubes in 3D space by adding the given x, y, and z coordinates to each cube's position.
+ * @param cubes - The array of cubes to position.
+ * @param x - The x-coordinate to add to the position of each cube.
+ * @param y - The y-coordinate to add to the position of each cube.
+ * @param z - The z-coordinate to add to the position of each cube.
+ */
+export function positionTetracube(cubes: BABYLON.Mesh[], x: number, y: number, z: number) {
+    cubes.forEach(cube => {
+        cube.position.x += x;
+        cube.position.y += y;
+        cube.position.z += z;
+    });
+}
+
+
 export function generateTetracube(scene: BABYLON.Scene) {
-    var tetracube = undefined;
+    let tetracube: BABYLON.Mesh[];
 
     const random = Math.floor(Math.random() * 7);
     switch (random) {

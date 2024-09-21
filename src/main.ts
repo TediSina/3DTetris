@@ -2,6 +2,7 @@ import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 import { Vector3 } from "@babylonjs/core";
 import { createBoundaryMesh } from "./createBoundaryMesh";
 import * as Tetracubes from "./createTetracubes";
+import { positionTetracube } from "./generateTetracube";
 
 
 const canvas = (document.getElementById("renderCanvas") as unknown) as HTMLCanvasElement;
@@ -20,45 +21,25 @@ boundary.position.y = 9.5;
 boundary.position.z = 4.5;
 
 const I_tetracube = Tetracubes.createI_Tetracube(scene);
-I_tetracube.position.x = 0;
-I_tetracube.position.y = 0;
-I_tetracube.position.z = 9;
-console.log(I_tetracube.getAbsolutePosition());
-console.log((I_tetracube.getChildren()[0] as BABYLON.Mesh).getAbsolutePosition());
-console.log((I_tetracube.getChildren()[3] as BABYLON.Mesh).getAbsolutePosition());
+positionTetracube(I_tetracube, -5, 0, 0);
 
 const LJ_tetracube = Tetracubes.createLJ_Tetracube(scene);
-LJ_tetracube.position.x = 0;
-LJ_tetracube.position.y = 0;
-LJ_tetracube.position.z = 0;
-console.log(LJ_tetracube.getAbsolutePosition());
-console.log((LJ_tetracube.getChildren()[0] as BABYLON.Mesh).getAbsolutePosition());
-console.log((LJ_tetracube.getChildren()[3] as BABYLON.Mesh).getAbsolutePosition());
+positionTetracube(LJ_tetracube, 0, 0, 0);
 
 const SZ_tetracube = Tetracubes.createSZ_Tetracube(scene);
-SZ_tetracube.position.x = 5;
-SZ_tetracube.position.y = 0;
-SZ_tetracube.position.z = 0;
+positionTetracube(SZ_tetracube, 5, 0, 0);
 
 const O_tetracube = Tetracubes.createO_Tetracube(scene);
-O_tetracube.position.x = 10;
-O_tetracube.position.y = 0;
-O_tetracube.position.z = 0;
+positionTetracube(O_tetracube, 10, 0, 0);
 
 const T_tetracube = Tetracubes.createT_Tetracube(scene);
-T_tetracube.position.x = 15;
-T_tetracube.position.y = 0;
-T_tetracube.position.z = 0;
+positionTetracube(T_tetracube, 15, 0, 0);
 
 const Tower1_Tetracube = Tetracubes.createTower1_Tetracube(scene);
-Tower1_Tetracube.position.x = 20;
-Tower1_Tetracube.position.y = 0;
-Tower1_Tetracube.position.z = 0;
+positionTetracube(Tower1_Tetracube, 20, 0, 0);
 
 const Tower2_Tetracube = Tetracubes.createTower2_Tetracube(scene);
-Tower2_Tetracube.position.x = 25;
-Tower2_Tetracube.position.y = 0;
-Tower2_Tetracube.position.z = 0;
+positionTetracube(Tower2_Tetracube, 25, 0, 0);
 
 engine.runRenderLoop(() => {
     scene.render();

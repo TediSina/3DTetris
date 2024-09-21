@@ -11,9 +11,9 @@ export function checkCubePosition(cube: BABYLON.Mesh) {
 }
 
 
-export function checkTetracubePosition(tetracube: BABYLON.TransformNode) {
+export function checkTetracubePosition(tetracube: BABYLON.Mesh[]) {
     const result: boolean[] = [];
-    tetracube.getChildren().forEach((cube: BABYLON.Mesh) => {
+    tetracube.forEach((cube: BABYLON.Mesh) => {
         result.push(checkCubePosition(cube))
     });
     
