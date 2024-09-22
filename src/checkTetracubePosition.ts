@@ -1,15 +1,18 @@
 import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 
 
-/**
- * Checks if a cube is positioned within the boundaries of the game.
- * The boundaries are: x = [-6, 3], y = [0, 22], z = [0, 9].
- * @param cube the cube to check.
- * @returns true if the cube is within the boundaries, false otherwise.
- */
-export function checkCubePosition(cube: BABYLON.Mesh) {
-    const absolutePosition = cube.getAbsolutePosition();
-    if (absolutePosition.x >= -6 && absolutePosition.x <= 3 && absolutePosition.y >= 0 && absolutePosition.y <= 22 && absolutePosition.z >= 0 && absolutePosition.z <= 9) {
+export function calculateTetracubeCubePosition(tetracube: BABYLON.Mesh[], x: number, y: number, z: number) {
+    const newTetracubeCubePositions: BABYLON.Vector3[] = [];
+    const translationMatrix = BABYLON.Matrix.Translation(x, y, z);
+    tetracube.forEach(cube => {
+        newTetracubeCubePositions.push(BABYLON.Vector3.TransformCoordinates(cube.position, translationMatrix));
+    });
+    return newTetracubeCubePositions;
+}
+
+
+export function checkCubePosition(position: BABYLON.Vector3) {
+    if (position.x >= -6 && position.x <= 3 && position.y >= 0 && position.y <= 22 && position.z >= 0 && position.z <= 9) {
         return true;
     } else {
         return false;
@@ -17,17 +20,12 @@ export function checkCubePosition(cube: BABYLON.Mesh) {
 }
 
 
-/**
- * Checks if all the cubes in a tetracube are positioned within the boundaries of the game.
- * The boundaries are: x = [-6, 3], y = [0, 22], z = [0, 9].
- * @param tetracube the tetracube to check.
- * @returns true if all the cubes are within the boundaries, false otherwise.
- */
-export function checkTetracubePosition(tetracube: BABYLON.Mesh[]) {
+export function checkTetracubePosition(tetracube: BABYLON.Mesh[], x: number, y: number, z: number) {
+    const calculatedTetracubeCubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(tetracube, x, y, z);
     const result: boolean[] = [];
-    tetracube.forEach((cube: BABYLON.Mesh) => {
-        result.push(checkCubePosition(cube))
+    calculatedTetracubeCubePositions.forEach((position: BABYLON.Vector3) => {
+        result.push(checkCubePosition(position))
     });
     
-    return result.every(Boolean); // returns true if all elements are true
+    return result.every(Boolean); // Returns true if all elements are true
 }

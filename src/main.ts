@@ -3,6 +3,7 @@ import { Vector3 } from "@babylonjs/core";
 import { createBoundaryMesh } from "./createBoundaryMesh";
 import * as Tetracubes from "./createTetracubes";
 import { positionTetracube } from "./generateTetracube";
+import { generateTetracube } from "./generateTetracube";
 
 
 const canvas = (document.getElementById("renderCanvas") as unknown) as HTMLCanvasElement;
@@ -40,6 +41,8 @@ positionTetracube(Tower1_Tetracube, 20, 0, 0);
 
 const Tower2_Tetracube = Tetracubes.createTower2_Tetracube(scene);
 positionTetracube(Tower2_Tetracube, 25, 0, 0);
+
+const generatedTetracube = generateTetracube(scene);
 
 engine.runRenderLoop(() => {
     scene.render();
