@@ -1,9 +1,9 @@
 import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 
 
-export function calculateTetracubeCubePosition(tetracube: BABYLON.Mesh[], x: number, y: number, z: number) {
+export function calculateTetracubeCubePosition(tetracube: BABYLON.Mesh[], position: BABYLON.Vector3): BABYLON.Vector3[] {
     const newTetracubeCubePositions: BABYLON.Vector3[] = [];
-    const translationMatrix = BABYLON.Matrix.Translation(x, y, z);
+    const translationMatrix = BABYLON.Matrix.Translation(position.x, position.y, position.z);
     tetracube.forEach(cube => {
         newTetracubeCubePositions.push(BABYLON.Vector3.TransformCoordinates(cube.position, translationMatrix));
     });
@@ -11,7 +11,7 @@ export function calculateTetracubeCubePosition(tetracube: BABYLON.Mesh[], x: num
 }
 
 
-export function checkCubePosition(position: BABYLON.Vector3) {
+export function checkCubePosition(position: BABYLON.Vector3): boolean {
     if (position.x >= -6 && position.x <= 3 && position.y >= 0 && position.y <= 22 && position.z >= 0 && position.z <= 9) {
         return true;
     } else {
@@ -20,8 +20,8 @@ export function checkCubePosition(position: BABYLON.Vector3) {
 }
 
 
-export function checkTetracubePosition(tetracube: BABYLON.Mesh[], x: number, y: number, z: number) {
-    const calculatedTetracubeCubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(tetracube, x, y, z);
+export function checkTetracubePosition(tetracube: BABYLON.Mesh[], position: BABYLON.Vector3): boolean {
+    const calculatedTetracubeCubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(tetracube, position);
     const result: boolean[] = [];
     calculatedTetracubeCubePositions.forEach((position: BABYLON.Vector3) => {
         result.push(checkCubePosition(position))

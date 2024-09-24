@@ -22,25 +22,28 @@ boundary.position.y = 9.5;
 boundary.position.z = 4.5;
 
 const I_tetracube = Tetracubes.createI_Tetracube(scene);
-positionTetracube(I_tetracube, -5, 0, 0);
+positionTetracube(I_tetracube, new Vector3(-5, 0, 0));
 
 const LJ_tetracube = Tetracubes.createLJ_Tetracube(scene);
-positionTetracube(LJ_tetracube, 0, 0, 0);
+positionTetracube(LJ_tetracube, new Vector3(0, 0, 0));
 
 const SZ_tetracube = Tetracubes.createSZ_Tetracube(scene);
-positionTetracube(SZ_tetracube, 5, 0, 0);
+positionTetracube(SZ_tetracube, new Vector3(5, 0, 0));
 
 const O_tetracube = Tetracubes.createO_Tetracube(scene);
-positionTetracube(O_tetracube, 10, 0, 0);
+positionTetracube(O_tetracube, new Vector3(10, 0, 0));
 
 const T_tetracube = Tetracubes.createT_Tetracube(scene);
-positionTetracube(T_tetracube, 15, 0, 0);
+positionTetracube(T_tetracube, new Vector3(15, 0, 0));
 
 const Tower1_Tetracube = Tetracubes.createTower1_Tetracube(scene);
-positionTetracube(Tower1_Tetracube, 20, 0, 0);
+positionTetracube(Tower1_Tetracube, new Vector3(20, 0, 0));
 
 const Tower2_Tetracube = Tetracubes.createTower2_Tetracube(scene);
-positionTetracube(Tower2_Tetracube, 25, 0, 0);
+positionTetracube(Tower2_Tetracube, new Vector3(25, 0, 0));
+
+const Tower3_Tetracube = Tetracubes.createTower3_Tetracube(scene);
+positionTetracube(Tower3_Tetracube, new Vector3(30, 0, 0));
 
 const generatedTetracube = generateTetracube(scene);
 
