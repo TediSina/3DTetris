@@ -1,5 +1,4 @@
 import * as BABYLON from "@babylonjs/core/Legacy/legacy";
-import { Vector3 } from "@babylonjs/core";
 
 
 /**
@@ -9,15 +8,15 @@ import { Vector3 } from "@babylonjs/core";
  * @param color - The color of the cube.
  * @returns The created cube mesh.
  */
-export function createCube(scene: BABYLON.Scene, position: Vector3, color: BABYLON.Color3): BABYLON.Mesh {
+export function createCube(scene: BABYLON.Scene, position: BABYLON.Vector3, color: BABYLON.Color3): BABYLON.Mesh {
     const cube = BABYLON.MeshBuilder.CreateBox("cube", { size: 1 }, scene);
-    
+
     // Set the cube's material
     const cubeMaterial = new BABYLON.StandardMaterial("cubeMaterial", scene);
     cubeMaterial.diffuseColor = color;
     cubeMaterial.emissiveColor = color;
     cube.material = cubeMaterial;
-    
+
     cube.enableEdgesRendering();
     cube.edgesWidth = 5.0;
     cube.edgesColor = new BABYLON.Color4(0, 0, 0, 1); // black edges
@@ -38,10 +37,10 @@ export function createCube(scene: BABYLON.Scene, position: Vector3, color: BABYL
 export function createI_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const color = new BABYLON.Color3(0, 0, 0.5);
     const cubes = [
-        createCube(scene, new Vector3(0, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 0), color),
-        createCube(scene, new Vector3(2, 0, 0), color),
-        createCube(scene, new Vector3(3, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(0, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(2, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(3, 0, 0), color),
     ];
     return cubes;
 }
@@ -55,10 +54,10 @@ export function createI_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
 export function createLJ_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const color = new BABYLON.Color3(0.5, 0, 0);
     const cubes = [
-        createCube(scene, new Vector3(0, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 0), color),
-        createCube(scene, new Vector3(2, 0, 0), color),
-        createCube(scene, new Vector3(2, 1, 0), color),
+        createCube(scene, new BABYLON.Vector3(0, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(2, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(2, 1, 0), color),
     ];
     return cubes;
 }
@@ -72,10 +71,10 @@ export function createLJ_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
 export function createT_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const color = new BABYLON.Color3(0.7, 0.5, 0.5);
     const cubes = [
-        createCube(scene, new Vector3(0, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 0), color),
-        createCube(scene, new Vector3(2, 0, 0), color),
-        createCube(scene, new Vector3(1, 1, 0), color),
+        createCube(scene, new BABYLON.Vector3(0, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(2, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 1, 0), color),
     ];
     return cubes;
 }
@@ -89,10 +88,10 @@ export function createT_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
 export function createSZ_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const color = new BABYLON.Color3(0, 0.5, 0);
     const cubes = [
-        createCube(scene, new Vector3(1, 0, 0), color),
-        createCube(scene, new Vector3(2, 0, 0), color),
-        createCube(scene, new Vector3(0, 1, 0), color),
-        createCube(scene, new Vector3(1, 1, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(2, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(0, 1, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 1, 0), color),
     ];
     return cubes;
 }
@@ -106,10 +105,10 @@ export function createSZ_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
 export function createO_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const color = new BABYLON.Color3(0.6, 0.6, 0);
     const cubes = [
-        createCube(scene, new Vector3(0, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 0), color),
-        createCube(scene, new Vector3(0, 1, 0), color),
-        createCube(scene, new Vector3(1, 1, 0), color),
+        createCube(scene, new BABYLON.Vector3(0, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(0, 1, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 1, 0), color),
     ];
     return cubes;
 }
@@ -123,10 +122,10 @@ export function createO_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
 export function createTower1_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const color = new BABYLON.Color3(0.6, 0.3, 0.0);
     const cubes = [
-        createCube(scene, new Vector3(0, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 1), color),
-        createCube(scene, new Vector3(1, 1, 0), color),
+        createCube(scene, new BABYLON.Vector3(0, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 1), color),
+        createCube(scene, new BABYLON.Vector3(1, 1, 0), color),
     ];
     return cubes;
 }
@@ -140,10 +139,10 @@ export function createTower1_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
 export function createTower2_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const color = new BABYLON.Color3(0.5, 0.5, 0.5);
     const cubes = [
-        createCube(scene, new Vector3(0, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 0), color),
-        createCube(scene, new Vector3(0, 0, 1), color),
-        createCube(scene, new Vector3(1, 1, 0), color),  // Tower at the start
+        createCube(scene, new BABYLON.Vector3(0, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(0, 0, 1), color),
+        createCube(scene, new BABYLON.Vector3(1, 1, 0), color),  // Tower at the start
     ];
     return cubes;
 }
@@ -157,10 +156,10 @@ export function createTower2_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
 export function createTower3_Tetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
     const color = new BABYLON.Color3(0.25, 0.25, 0.25);
     const cubes = [
-        createCube(scene, new Vector3(0, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 0), color),
-        createCube(scene, new Vector3(1, 0, 1), color),
-        createCube(scene, new Vector3(0, 1, 0), color),  // Tower at the start
+        createCube(scene, new BABYLON.Vector3(0, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 0), color),
+        createCube(scene, new BABYLON.Vector3(1, 0, 1), color),
+        createCube(scene, new BABYLON.Vector3(0, 1, 0), color),  // Tower at the start
     ];
     return cubes;
 }
