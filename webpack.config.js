@@ -1,5 +1,5 @@
 module.exports = {
-    entry: './src/main.ts',
+    entry: './src/App.ts',
     mode: 'development',
     resolve: {
         extensions: [".ts", ".js"],

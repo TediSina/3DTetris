@@ -13,6 +13,13 @@ export function calculateTetracubeCubePosition(tetracube: BABYLON.Mesh[], positi
 }
 
 
+/**
+ * Checks if the given cube position is within the valid game board boundaries.
+ * A valid position is one where x is between -6 and 3, y is between 0 and 22, and z is between 0 and 9.
+ * The position coordinates must also be integers.
+ * @param position - The position of the cube to be checked.
+ * @returns True if the position is valid, false otherwise.
+ */
 export function checkCubePosition(position: BABYLON.Vector3): boolean {
     if (position.x >= -6 && position.x <= 3 && position.y >= 0 && position.y <= 22 && position.z >= 0 && position.z <= 9 && Number.isInteger(position.x) && Number.isInteger(position.y) && Number.isInteger(position.z)) {
         return true;

@@ -2,6 +2,7 @@ import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 import * as Tetracubes from "./createTetracubes";
 import { checkTetracubePosition } from "./checkTetracubePosition";
 import { checkTetracubeRotation } from "./checkTetracubeRotation";
+import { calculateTetracubeCubePosition } from "./checkTetracubePosition";
 
 
 /**
@@ -105,12 +106,14 @@ export function generateTetracubePosition(tetracube: BABYLON.Mesh[]): BABYLON.Ve
 }
 
 
-export function generateTetracubeRotation(tetracube: BABYLON.Mesh[]): BABYLON.Vector3 {
+export function generateTetracubeRotation(tetracube: BABYLON.Mesh[], tetracubePosition: BABYLON.Vector3): BABYLON.Vector3 {
+    const cubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(tetracube, tetracubePosition);
+
     let rotationX = Math.floor(Math.random() * 4) * Math.PI / 2; // 0, π/2, π, 3π/2
     let rotationY = Math.floor(Math.random() * 4) * Math.PI / 2;
     let rotationZ = Math.floor(Math.random() * 4) * Math.PI / 2;
 
-    while (!checkTetracubeRotation(tetracube, new BABYLON.Vector3(rotationX, rotationY, rotationZ))) {
+    while (!checkTetracubeRotation(cubePositions,  new BABYLON.Vector3(rotationX, rotationY, rotationZ))) {
         rotationX = Math.floor(Math.random() * 4) * Math.PI / 2;
         rotationY = Math.floor(Math.random() * 4) * Math.PI / 2;
         rotationZ = Math.floor(Math.random() * 4) * Math.PI / 2;
@@ -125,7 +128,7 @@ export function generateTetracube(scene: BABYLON.Scene): BABYLON.Mesh[] {
 
     const position: BABYLON.Vector3 = generateTetracubePosition(tetracube);
 
-    const rotation: BABYLON.Vector3 = generateTetracubeRotation(tetracube);
+    const rotation: BABYLON.Vector3 = generateTetracubeRotation(tetracube, position);
 
     positionTetracube(tetracube, position);
 

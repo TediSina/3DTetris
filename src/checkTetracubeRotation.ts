@@ -2,19 +2,27 @@ import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 import { checkCubePosition } from "./checkTetracubePosition";
 
 
-export function calculateTetracubeCubeRotation(tetracube: BABYLON.Mesh[], rotation: BABYLON.Vector3): BABYLON.Vector3[] {
+export function calculateTetracubeCubeRotation(position: BABYLON.Vector3[], rotation: BABYLON.Vector3): BABYLON.Vector3[] {
     const newTetracubeCubePositions: BABYLON.Vector3[] = [];
     const rotationMatrix = BABYLON.Matrix.RotationYawPitchRoll(rotation.y, rotation.x, rotation.z);
 
     // Find the center of the tetracube by averaging the positions of the cubes
-    const center = tetracube.reduce((acc, cube) => acc.addInPlace(cube.position), BABYLON.Vector3.Zero()).scaleInPlace(1 / tetracube.length);
+    const center = position.reduce((acc, pos) => acc.addInPlace(pos), BABYLON.Vector3.Zero()).scaleInPlace(1 / position.length);
 
-    tetracube.forEach(cube => {
+    for (let i = 0; i < position.length; i++) {
         // Calculate local position relative to tetracube center
-        const localPosition = cube.position.subtract(center);
+        const localPosition = position[i].subtract(center);
 
         // Apply the rotation matrix to the local position
         const rotatedPosition = BABYLON.Vector3.TransformCoordinates(localPosition, rotationMatrix);
+
+        const unroundedPosition = new BABYLON.Vector3(
+            rotatedPosition.x + center.x,
+            rotatedPosition.y + center.y,
+            rotatedPosition.z + center.z
+        );
+
+        console.log("Before Rounding: " + unroundedPosition); 
 
         // Add the center back and round the result to integers
         const finalPosition = new BABYLON.Vector3(
@@ -23,15 +31,17 @@ export function calculateTetracubeCubeRotation(tetracube: BABYLON.Mesh[], rotati
             Math.round(rotatedPosition.z + center.z)
         );
 
+        console.log("After Rounding: " + finalPosition);
+
         newTetracubeCubePositions.push(finalPosition);
-    });
+    };
 
     return newTetracubeCubePositions;
 }
 
 
-export function checkTetracubeRotation(tetracube: BABYLON.Mesh[], rotation: BABYLON.Vector3): boolean {
-    const rotatedTetracubeCubePositions: BABYLON.Vector3[] = calculateTetracubeCubeRotation(tetracube, rotation);
+export function checkTetracubeRotation(position: BABYLON.Vector3[], rotation: BABYLON.Vector3): boolean {
+    const rotatedTetracubeCubePositions: BABYLON.Vector3[] = calculateTetracubeCubeRotation(position, rotation);
     const result: boolean[] = [];
 
     rotatedTetracubeCubePositions.forEach((position: BABYLON.Vector3) => {
