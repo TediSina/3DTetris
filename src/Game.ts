@@ -1,8 +1,9 @@
 import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 import { createBoundaryMesh } from "./createBoundaryMesh";
 import * as Tetracubes from "./createTetracubes";
-import { positionTetracube } from "./generateTetracube";
-import { checkTetracubePosition } from "./checkTetracubePosition";
+import { positionTetracube, rotateTetracube } from "./generateTetracube";
+import { checkTetracubePosition, calculateTetracubeCubePosition } from "./checkTetracubePosition";
+import { checkTetracubeRotation } from "./checkTetracubeRotation";
 import { Tetracube } from "./Tetracube";
 
 
@@ -143,8 +144,8 @@ export class Game {
     }
 
     public keyDown(event: KeyboardEvent): void {
-        // TODO: Add and fix Tetracube rotation.
-        if (event.key === "g" || event.key === "Gg") {
+        // TODO: Fix Tetracube rotation.
+        if (event.key === "g" || event.key === "G") {
             this.Tetracube.generateTetracube();
         } else if (event.shiftKey) {
             this.timeStep += 10; 
@@ -171,6 +172,27 @@ export class Game {
                 this.Tetracube.getCubes().forEach(cube => {
                     cube.position = new BABYLON.Vector3(cube.position.x - 1, cube.position.y, cube.position.z);
                 })
+            }
+        } else if (event.key === "q" || event.key === "Q") {
+            const rotationX = Math.PI / 2;
+            const cubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, 0));
+
+            if (checkTetracubeRotation(cubePositions, new BABYLON.Vector3(rotationX, 0, 0))) {
+                rotateTetracube(this.Tetracube.getCubes(), new BABYLON.Vector3(rotationX, 0, 0));
+            }
+        } else if (event.key === "e" || event.key === "E") {
+            const rotationY = Math.PI / 2;
+            const cubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, 0));
+
+            if (checkTetracubeRotation(cubePositions, new BABYLON.Vector3(0, rotationY, 0))) {  
+                rotateTetracube(this.Tetracube.getCubes(), new BABYLON.Vector3(0, rotationY, 0));
+            }
+        } else if (event.key === "r" || event.key === "R") {
+            const rotationZ = Math.PI / 2;
+            const cubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, 0));
+
+            if (checkTetracubeRotation(cubePositions, new BABYLON.Vector3(0, 0, rotationZ))) {
+                rotateTetracube(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, rotationZ));
             }
         }
     }
