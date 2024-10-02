@@ -20,7 +20,7 @@ export class Game {
 
         this.initializeMatrixMap(10, 22, 10);
 
-        const boundary: BABYLON.Mesh = createBoundaryMesh(scene, 10, 20, 10, [0, 4, 2]) as BABYLON.Mesh;
+        const boundary: BABYLON.Mesh = createBoundaryMesh(scene, 10, 20, 10, [0, 4, 2]);
         boundary.position.x = -1.5;
         boundary.position.y = 9.5;
         boundary.position.z = 4.5;

@@ -13,7 +13,7 @@ import { GridMaterial } from "@babylonjs/materials";
  * @param transparencyFaces - The indices of the faces to make transparent.
  * @returns The generated boundary mesh.
  */
-export function createBoundaryMesh(scene: BABYLON.Scene, width: number, height: number, depth: number, transparencyFaces: number[] = []): BABYLON.Nullable<BABYLON.Mesh> {
+export function createBoundaryMesh(scene: BABYLON.Scene, width: number, height: number, depth: number, transparencyFaces: number[] = []): BABYLON.Mesh {
     const materials: any[] = [];
     
     const gridMaterial = new GridMaterial("groundMaterial", scene);
@@ -77,7 +77,7 @@ export function createBoundaryMesh(scene: BABYLON.Scene, width: number, height: 
     });
 
     // Merge all the faces into one mesh
-    const boundaryMesh = BABYLON.Mesh.MergeMeshes(faces, true, true, undefined, false, true);
+    const boundaryMesh = BABYLON.Mesh.MergeMeshes(faces, true, true, undefined, false, true) as BABYLON.Mesh;
 
     return boundaryMesh;
 }
