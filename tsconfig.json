@@ -3,5 +3,6 @@
         "module": "esNext",
         "target": "ES6",
         "moduleResolution": "node",
+        "strict": true,
     }
 }

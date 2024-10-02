@@ -4,7 +4,7 @@ import { checkTetracubePosition, calculateTetracubeCubePosition } from "./checkT
 import { checkTetracubeRotation, calculateTetracubeCubeRotation } from "./checkTetracubeRotation";
 
 export class Tetracube {
-    private cubes: BABYLON.Mesh[];
+    private cubes!: BABYLON.Mesh[];
     private scene: BABYLON.Scene;
 
     constructor(scene: BABYLON.Scene) {
