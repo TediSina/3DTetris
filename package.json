@@ -8,14 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/TediSina/3DTetris"
+    "url": "git+https://github.com/TediSina/3DTetris.git"
   },
   "keywords": [
     "3DTetris",
     "Tetris",
     "JS",
     "JavaScript",
-    "Babylon"
+    "Babylon",
+    "3D",
+    "Tetris"
   ],
   "author": "TediSina",
   "license": "MIT",
@@ -29,5 +31,9 @@
   "dependencies": {
     "@babylonjs/core": "^7.25.1",
     "@babylonjs/materials": "^7.25.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/TediSina/3DTetris/issues"
+  },
+  "homepage": "https://github.com/TediSina/3DTetris#readme"
 }
