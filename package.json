@@ -4,7 +4,9 @@
   "description": "A 3D Tetris game created in Babylon.js.",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx webpack",
+    "dev": "npx webpack serve"
   },
   "repository": {
     "type": "git",
