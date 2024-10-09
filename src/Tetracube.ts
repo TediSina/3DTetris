@@ -257,12 +257,12 @@ export class Tetracube {
      * @returns The generated position.
      */
     public generatePosition(): BABYLON.Vector3 {
-        let positionX = Math.floor(Math.random() * 10) - 6;
+        let positionX = Math.floor(Math.random() * 10);
         const positionY = 19;
         let positionZ = Math.floor(Math.random() * 10);
 
         while (!checkTetracubePosition(this.cubes, new BABYLON.Vector3(positionX, positionY, positionZ))) {
-            positionX = Math.floor(Math.random() * 10) - 6;
+            positionX = Math.floor(Math.random() * 10);
             positionZ = Math.floor(Math.random() * 10);
         }
 

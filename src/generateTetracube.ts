@@ -93,12 +93,12 @@ export function pickRandomTetracube(scene: BABYLON.Scene): [BABYLON.Mesh[], "I" 
 
 
 export function generateTetracubePosition(tetracube: BABYLON.Mesh[]): BABYLON.Vector3 {
-    let positionX = Math.floor(Math.random() * (3 - (-6) + 1)) + (-6);
+    let positionX = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
     const positionY = 19;
     let positionZ = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
 
     while (!checkTetracubePosition(tetracube, new BABYLON.Vector3(positionX, positionY, positionZ))) {
-        positionX = Math.floor(Math.random() * (3 - (-6) + 1)) + (-6);
+        positionX = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
         positionZ = Math.floor(Math.random() * (9 - 0 + 1)) + 0;
     }
 

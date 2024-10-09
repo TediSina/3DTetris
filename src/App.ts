@@ -18,8 +18,8 @@ class App {
         const canvas = (document.getElementById("renderCanvas") as unknown) as HTMLCanvasElement;
         const engine = new BABYLON.Engine(canvas);
         const scene = new BABYLON.Scene(engine);
-        const camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(-1.5, 9.5, 4.5), scene);
-        camera.setPosition(new BABYLON.Vector3(-1.5, 9.5, 35));
+        const camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(4.5, 9.5, 4.5), scene);
+        camera.setPosition(new BABYLON.Vector3(4.5, 9.5, 35));
         camera.attachControl(canvas, true);
         const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
         light.intensity = 0.7;

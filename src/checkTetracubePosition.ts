@@ -21,7 +21,7 @@ export function calculateTetracubeCubePosition(tetracube: BABYLON.Mesh[], positi
  * @returns True if the position is valid, false otherwise.
  */
 export function checkCubePosition(position: BABYLON.Vector3): boolean {
-    if (position.x >= -6 && position.x <= 3 && position.y >= 0 && position.y <= 22 && position.z >= 0 && position.z <= 9 && Number.isInteger(position.x) && Number.isInteger(position.y) && Number.isInteger(position.z)) {
+    if (position.x >= 0 && position.x <= 9 && position.y >= 0 && position.y <= 22 && position.z >= 0 && position.z <= 9 && Number.isInteger(position.x) && Number.isInteger(position.y) && Number.isInteger(position.z)) {
         return true;
     } else {
         return false;

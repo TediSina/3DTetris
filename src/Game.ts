@@ -21,33 +21,33 @@ export class Game {
         this.initializeMatrixMap(10, 22, 10);
 
         const boundary: BABYLON.Mesh = createBoundaryMesh(scene, 10, 20, 10, [0, 4, 2]);
-        boundary.position.x = -1.5;
+        boundary.position.x = 4.5;
         boundary.position.y = 9.5;
         boundary.position.z = 4.5;
 
         const I_tetracube = Tetracubes.createI_Tetracube(scene);
-        positionTetracube(I_tetracube, new BABYLON.Vector3(-20, 0, -5));
+        positionTetracube(I_tetracube, new BABYLON.Vector3(-15, 0, -5));
 
         const LJ_tetracube = Tetracubes.createLJ_Tetracube(scene);
-        positionTetracube(LJ_tetracube, new BABYLON.Vector3(-15, 0, -5));
+        positionTetracube(LJ_tetracube, new BABYLON.Vector3(-10, 0, -5));
 
         const SZ_tetracube = Tetracubes.createSZ_Tetracube(scene);
-        positionTetracube(SZ_tetracube, new BABYLON.Vector3(-10, 0, -5));
+        positionTetracube(SZ_tetracube, new BABYLON.Vector3(-5, 0, -5));
 
         const O_tetracube = Tetracubes.createO_Tetracube(scene);
-        positionTetracube(O_tetracube, new BABYLON.Vector3(-5, 0, -5));
+        positionTetracube(O_tetracube, new BABYLON.Vector3(0, 0, -5));
 
         const T_tetracube = Tetracubes.createT_Tetracube(scene);
-        positionTetracube(T_tetracube, new BABYLON.Vector3(0, 0, -5));
+        positionTetracube(T_tetracube, new BABYLON.Vector3(5, 0, -5));
 
         const Tower1_Tetracube = Tetracubes.createTower1_Tetracube(scene);
-        positionTetracube(Tower1_Tetracube, new BABYLON.Vector3(5, 0, -5));
+        positionTetracube(Tower1_Tetracube, new BABYLON.Vector3(10, 0, -5));
 
         const Tower2_Tetracube = Tetracubes.createTower2_Tetracube(scene);
-        positionTetracube(Tower2_Tetracube, new BABYLON.Vector3(10, 0, -5));
+        positionTetracube(Tower2_Tetracube, new BABYLON.Vector3(15, 0, -5));
 
         const Tower3_Tetracube = Tetracubes.createTower3_Tetracube(scene);
-        positionTetracube(Tower3_Tetracube, new BABYLON.Vector3(15, 0, -5));
+        positionTetracube(Tower3_Tetracube, new BABYLON.Vector3(20, 0, -5));
 
         this.Tetracube.generateTetracube();
         this.updateMatrixMap(this.Tetracube.getCubes(), 1);
@@ -70,11 +70,11 @@ export class Game {
             const z = cube.position.z;
             
             if (
-                x >= -6 && x <= 3 &&
+                x >= 0 && x <= 9 &&
                 y >= 0 && y <= 22 &&
                 z >= 0 && z <= 9
             ) {
-                this.matrixMap[x + 6][y][z] = value;
+                this.matrixMap[x][y][z] = value;
             } else {
                 console.warn(`Position out of bounds: (${x}, ${y}, ${z})`);
             }
@@ -116,11 +116,11 @@ export class Game {
             const z = Math.floor(cube.position.z);
     
             if (
-                x >= -6 && x <= 3 &&
+                x >= 0 && x <= 9 &&
                 y >= 0 && y <= 22 &&
                 z >= 0 && z <= 9
             ) {
-                if (!occupiedPositions.has(`${x},${y - 1},${z}`) && this.matrixMap[x + 6][y - 1][z] === 1) {
+                if (!occupiedPositions.has(`${x},${y - 1},${z}`) && this.matrixMap[x][y - 1][z] === 1) {
                     console.log("Collided", x, y - 1, z);
                     return true;
                 }
@@ -173,12 +173,12 @@ export class Game {
             const z = Math.floor(cube.position.z);
     
             if (
-                x >= -6 && x <= 3 &&
+                x >= 0 && x <= 9 &&
                 y >= 0 && y <= 22 &&
                 z >= 0 && z <= 9
             ) {
                 try {
-                    if (!occupiedPositions.has(`${x},${y},${z - 1}`) && this.matrixMap[x + 6][y][z - 1] === 1) {
+                    if (!occupiedPositions.has(`${x},${y},${z - 1}`) && this.matrixMap[x][y][z - 1] === 1) {
                         console.log("Collided", x, y, z - 1);
                         return true;
                     }
@@ -230,12 +230,12 @@ export class Game {
             const z = Math.floor(cube.position.z);
     
             if (
-                x >= -6 && x <= 3 &&
+                x >= 0 && x <= 9 &&
                 y >= 0 && y <= 22 &&
                 z >= 0 && z <= 9
             ) {
                 try {
-                    if (!occupiedPositions.has(`${x},${y},${z + 1}`) && this.matrixMap[x + 6][y][z + 1] === 1) {
+                    if (!occupiedPositions.has(`${x},${y},${z + 1}`) && this.matrixMap[x][y][z + 1] === 1) {
                         console.log("Collided", x, y, z + 1);
                         return true;
                     }
@@ -287,12 +287,12 @@ export class Game {
             const z = Math.floor(cube.position.z);
     
             if (
-                x >= -6 && x <= 3 &&
+                x >= 0 && x <= 9 &&
                 y >= 0 && y <= 22 &&
                 z >= 0 && z <= 9
             ) {
                 try {
-                    if (!occupiedPositions.has(`${x + 1},${y},${z}`) && this.matrixMap[x + 7][y][z] === 1) {
+                    if (!occupiedPositions.has(`${x + 1},${y},${z}`) && this.matrixMap[x + 1][y][z] === 1) {
                         console.log("Collided", x + 1, y, z);
                         return true;
                     }
@@ -344,12 +344,12 @@ export class Game {
             const z = Math.floor(cube.position.z);
     
             if (
-                x >= -6 && x <= 3 &&
+                x >= 0 && x <= 9 &&
                 y >= 0 && y <= 22 &&
                 z >= 0 && z <= 9
             ) {
                 try {
-                    if (!occupiedPositions.has(`${x - 1},${y},${z}`) && this.matrixMap[x + 5][y][z] === 1) {
+                    if (!occupiedPositions.has(`${x - 1},${y},${z}`) && this.matrixMap[x - 1][y][z] === 1) {
                         console.log("Collided", x - 1, y, z);
                         return true;
                     }
