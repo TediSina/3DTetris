@@ -3,8 +3,9 @@ import { createBoundaryMesh } from "./createBoundaryMesh";
 import * as Tetracubes from "./createTetracubes";
 import { positionTetracube, rotateTetracube } from "./generateTetracube";
 import { checkTetracubePosition, calculateTetracubeCubePosition } from "./checkTetracubePosition";
-import { checkTetracubeRotation } from "./checkTetracubeRotation";
+import { checkTetracubeRotation, calculateTetracubeCubeRotation } from "./checkTetracubeRotation";
 import { Tetracube } from "./Tetracube";
+import * as Matrices from "./rotationMatrices";
 
 
 export class Game {
@@ -14,6 +15,10 @@ export class Game {
     private timeCheck = 60;
     private matrixMap: number[][][] = [];
 
+    /**
+     * Constructor for the Game class.
+     * @param scene The scene in which the game should be rendered.
+     */
     constructor(scene: BABYLON.Scene) {
         this.scene = scene;
         this.Tetracube = new Tetracube(this.scene);
@@ -53,6 +58,12 @@ export class Game {
         this.updateMatrixMap(this.Tetracube.getCubes(), 1);
     }
 
+    /**
+     * Initializes the matrix map with the given dimensions.
+     * @param width - The width of the matrix map.
+     * @param height - The height of the matrix map.
+     * @param depth - The depth of the matrix map.
+     */
     private initializeMatrixMap(width: number, height: number, depth: number) {
         this.matrixMap = Array.from({ length: width }, () =>
             Array.from({ length: height }, () =>
@@ -63,6 +74,11 @@ export class Game {
         console.log(this.matrixMap);
     }
 
+    /**
+     * Updates the matrix map with the given value at the positions of the given cubes.
+     * @param cubes - The cubes to update the matrix map with.
+     * @param value - The value to set in the matrix map.
+     */
     private updateMatrixMap(cubes: BABYLON.Mesh[], value: number) {
         for (const cube of cubes) {
             const x = cube.position.x;
@@ -81,6 +97,11 @@ export class Game {
         }
     }
 
+    /**
+     * Moves the tetracube down by one unit and updates the matrix map
+     * accordingly. The matrix map is updated in two steps: first, the old
+     * positions are cleared, and then the new positions are filled in.
+     */
     private moveTetracubeDown() {
         this.updateMatrixMap(this.Tetracube.getCubes(), 0);
 
@@ -89,6 +110,11 @@ export class Game {
         this.updateMatrixMap(this.Tetracube.getCubes(), 1);
     }
 
+    /**
+     * Checks if the tetracube has reached the bottom of the game board.
+     * If the tetracube has reached the bottom, this function updates the matrix map to reflect the tetracube's position.
+     * @returns True if the tetracube has reached the bottom, false otherwise.
+     */
     private tetracubeHasReachedBottom(): boolean {
         if (this.Tetracube.getCubes().some(cube => cube.position.y <= 0)) {
             this.updateMatrixMap(this.Tetracube.getCubes(), 1);
@@ -97,6 +123,17 @@ export class Game {
         return false;
     }
 
+    /**
+     * Checks if the tetracube has collided with the bottom of the game board
+     * or with any existing cubes in the game board.
+     * This function first finds all positions occupied by the tetracube by
+     * rounding the positions of the cubes in the tetracube to whole numbers
+     * and then checks if any of the positions directly below the tetracube
+     * are occupied by other cubes. If any of them are, this function returns
+     * true, indicating that the tetracube has collided with something. If none
+     * of them are, this function returns false.
+     * @returns True if the tetracube has collided with something, false otherwise.
+     */
     private cubesHaveCollided(): boolean {
         const tetracubeCubes = this.Tetracube.getCubes();
         const occupiedPositions = new Set();
@@ -130,6 +167,13 @@ export class Game {
         return false;
     }
 
+    /**
+     * Updates the game state once per frame.
+     * If the tetracube has reached the bottom of the game board, generates a new tetracube.
+     * If the position below the tetracube is valid and the tetracube is not colliding with any other cubes, moves the tetracube down.
+     * Otherwise, generates a new tetracube.
+     * Increments the time step and resets it to 0 when it reaches the time check.
+     */
     public update(): void {
         if (this.timeStep >= this.timeCheck) {
             if (this.tetracubeHasReachedBottom()) {
@@ -180,15 +224,16 @@ export class Game {
                 try {
                     if (!occupiedPositions.has(`${x},${y},${z - 1}`) && this.matrixMap[x][y][z - 1] === 1) {
                         console.log("Collided", x, y, z - 1);
-                        return true;
+                        return false;
                     }
                 } catch (error) {
-                    console.log("Movement out of bounds");
+                    console.log("Movement out of bounds", x, y, z);
+                    return false;
                 }
             }
         }
     
-        return false;
+        return true;
     }
 
     /**
@@ -196,7 +241,7 @@ export class Game {
      * if the resulting position is valid (i.e. does not collide with any other cubes or the border of the game board).
      */
     public moveW(): void {
-        if (!this.checkW() && checkTetracubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, -1))) {
+        if (this.checkW() && checkTetracubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, -1))) {
             this.updateMatrixMap(this.Tetracube.getCubes(), 0);
 
             this.Tetracube.getCubes().forEach(cube => {
@@ -237,15 +282,16 @@ export class Game {
                 try {
                     if (!occupiedPositions.has(`${x},${y},${z + 1}`) && this.matrixMap[x][y][z + 1] === 1) {
                         console.log("Collided", x, y, z + 1);
-                        return true;
+                        return false;
                     }
                 } catch (error) {
-                    console.log("Movement out of bounds");
+                    console.log("Movement out of bounds", x, y, z);
+                    return false;
                 }
             }
         }
     
-        return false;
+        return true;
     }
 
     /**
@@ -253,7 +299,7 @@ export class Game {
      * if the resulting position is valid (i.e. does not collide with any other cubes or the border of the game board).
      */
     public moveS(): void {
-        if (!this.checkS() && checkTetracubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, 1))) {
+        if (this.checkS() && checkTetracubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, 1))) {
             this.updateMatrixMap(this.Tetracube.getCubes(), 0);
 
             this.Tetracube.getCubes().forEach(cube => {
@@ -294,15 +340,16 @@ export class Game {
                 try {
                     if (!occupiedPositions.has(`${x + 1},${y},${z}`) && this.matrixMap[x + 1][y][z] === 1) {
                         console.log("Collided", x + 1, y, z);
-                        return true;
+                        return false;
                     }
                 } catch (error) {
-                    console.log("Movement out of bounds");
+                    console.log("Movement out of bounds", x, y, z);
+                    return false;
                 }
             }
         }
     
-        return false;
+        return true;
     }
 
     /**
@@ -310,7 +357,7 @@ export class Game {
      * if the resulting position is valid (i.e. does not collide with any other cubes or the border of the game board).
      */
     public moveA(): void {
-        if (!this.checkA() && checkTetracubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(1, 0, 0))) {
+        if (this.checkA() && checkTetracubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(1, 0, 0))) {
             this.updateMatrixMap(this.Tetracube.getCubes(), 0);
 
             this.Tetracube.getCubes().forEach(cube => {
@@ -351,15 +398,16 @@ export class Game {
                 try {
                     if (!occupiedPositions.has(`${x - 1},${y},${z}`) && this.matrixMap[x - 1][y][z] === 1) {
                         console.log("Collided", x - 1, y, z);
-                        return true;
+                        return false;
                     }
                 } catch (error) {
-                    console.log("Movement out of bounds");
+                    console.log("Movement out of bounds", x, y, z);
+                    return false;
                 }
             }
         }
     
-        return false;
+        return true;
     }
 
     /**
@@ -367,7 +415,7 @@ export class Game {
      * if the resulting position is valid (i.e. does not collide with any other cubes or the border of the game board).
      */
     public moveD(): void {
-        if (!this.checkD() && checkTetracubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(-1, 0, 0))) {
+        if (this.checkD() && checkTetracubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(-1, 0, 0))) {
             this.updateMatrixMap(this.Tetracube.getCubes(), 0);
 
             this.Tetracube.getCubes().forEach(cube => {
@@ -379,18 +427,129 @@ export class Game {
     }
 
     /**
+     * Checks if the current tetracube can be rotated one quarter turn clockwise around the X axis
+     * if the resulting rotation is valid (i.e. does not collide with any other cubes or the border of the game board).
+     * @returns True if the rotation is valid, false otherwise.
+     */
+    public checkQ(): boolean {
+        const currentCubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.cubes, BABYLON.Vector3.Zero());
+        const calculatedCubePositions: BABYLON.Vector3[] = calculateTetracubeCubeRotation(currentCubePositions, Matrices.rotationMatrixX90, this.Tetracube.type);
+
+        const currentOccupiedPositions: Set<string> = new Set();
+
+        for (const position of currentCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+            currentOccupiedPositions.add(`${x},${y},${z}`);
+        }
+
+        console.log(currentOccupiedPositions);
+
+        const calculatedOccupiedPositions: Set<string> = new Set();
+    
+        for (const position of calculatedCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+            calculatedOccupiedPositions.add(`${x},${y},${z}`);
+        }
+
+        console.log(calculatedOccupiedPositions);
+
+        for (const position of calculatedCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+
+            if (
+                x >= 0 && x <= 9 &&
+                y >= 0 && y <= 22 &&
+                z >= 0 && z <= 9
+            ) {
+                try {
+                    if (!currentOccupiedPositions.has(`${x},${y},${z}`) && this.matrixMap[x][y][z] === 1) {
+                        console.log("Collided", x, y, z);
+                        return false;
+                    }
+                } catch (error) {
+                    console.log("Movement out of bounds", x, y, z);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Rotates the current tetracube one quarter turn clockwise around the X axis
      * if the resulting rotation is valid (i.e. does not collide with any other cubes or the border of the game board).
      */
     public rotateQ(): void {
-        const rotationX = Math.PI / 2;
         const cubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, 0));
 
-        if (checkTetracubeRotation(cubePositions, new BABYLON.Vector3(rotationX, 0, 0), this.Tetracube.type)) {
+        if (this.checkQ() && checkTetracubeRotation(cubePositions, Matrices.rotationMatrixX90, this.Tetracube.type)) {
             this.updateMatrixMap(this.Tetracube.getCubes(), 0);
-            rotateTetracube(this.Tetracube.getCubes(), new BABYLON.Vector3(rotationX, 0, 0));
+            rotateTetracube(this.Tetracube.getCubes(), Matrices.rotationMatrixX90);
         }
         this.updateMatrixMap(this.Tetracube.getCubes(), 1);
+    }
+
+    /**
+     * Checks if the current tetracube can be rotated one quarter turn clockwise around the Y axis
+     * if the resulting rotation is valid (i.e. does not collide with any other cubes or the border of the game board).
+     * @returns True if the rotation is valid, false otherwise.
+     */
+    public checkE(): boolean {
+        const currentCubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.cubes, BABYLON.Vector3.Zero());
+        const calculatedCubePositions: BABYLON.Vector3[] = calculateTetracubeCubeRotation(currentCubePositions, Matrices.rotationMatrixY90, this.Tetracube.type);
+
+        const currentOccupiedPositions: Set<string> = new Set();
+
+        for (const position of currentCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+            currentOccupiedPositions.add(`${x},${y},${z}`);
+        }
+
+        console.log(currentOccupiedPositions);
+
+        const calculatedOccupiedPositions: Set<string> = new Set();
+    
+        for (const position of calculatedCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+            calculatedOccupiedPositions.add(`${x},${y},${z}`);
+        }
+
+        console.log(calculatedOccupiedPositions);
+
+        for (const position of calculatedCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+
+            if (
+                x >= 0 && x <= 9 &&
+                y >= 0 && y <= 22 &&
+                z >= 0 && z <= 9
+            ) {
+                try {
+                    if (!currentOccupiedPositions.has(`${x},${y},${z}`) && this.matrixMap[x][y][z] === 1) {
+                        console.log("Collided", x, y, z);
+                        return false;
+                    }
+                } catch (error) {
+                    console.log("Movement out of bounds", x, y, z);
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -398,14 +557,69 @@ export class Game {
      * if the resulting rotation is valid (i.e. does not collide with any other cubes or the border of the game board).
      */
     public rotateE(): void {
-        const rotationY = Math.PI / 2;
         const cubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, 0));
 
-        if (checkTetracubeRotation(cubePositions, new BABYLON.Vector3(0, rotationY, 0), this.Tetracube.type)) {
+        if (this.checkE() && checkTetracubeRotation(cubePositions, Matrices.rotationMatrixY90, this.Tetracube.type)) {
             this.updateMatrixMap(this.Tetracube.getCubes(), 0);
-            rotateTetracube(this.Tetracube.getCubes(), new BABYLON.Vector3(0, rotationY, 0));
+            rotateTetracube(this.Tetracube.getCubes(), Matrices.rotationMatrixY90);
         }
         this.updateMatrixMap(this.Tetracube.getCubes(), 1);
+    }
+
+    /**
+     * Checks if the current tetracube can be rotated one quarter turn clockwise around the Z axis
+     * if the resulting rotation is valid (i.e. does not collide with any other cubes or the border of the game board).
+     * @returns True if the rotation is valid, false otherwise.
+     */
+    public checkR(): boolean {
+        const currentCubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.cubes, BABYLON.Vector3.Zero());
+        const calculatedCubePositions: BABYLON.Vector3[] = calculateTetracubeCubeRotation(currentCubePositions, Matrices.rotationMatrixZ90, this.Tetracube.type);
+
+        const currentOccupiedPositions: Set<string> = new Set();
+
+        for (const position of currentCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+            currentOccupiedPositions.add(`${x},${y},${z}`);
+        }
+
+        console.log(currentOccupiedPositions);
+
+        const calculatedOccupiedPositions: Set<string> = new Set();
+    
+        for (const position of calculatedCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+            calculatedOccupiedPositions.add(`${x},${y},${z}`);
+        }
+
+        console.log(calculatedOccupiedPositions);
+
+        for (const position of calculatedCubePositions) {
+            const x = Math.floor(position.x);
+            const y = Math.floor(position.y);
+            const z = Math.floor(position.z);
+
+            if (
+                x >= 0 && x <= 9 &&
+                y >= 0 && y <= 22 &&
+                z >= 0 && z <= 9
+            ) {
+                try {
+                    if (!currentOccupiedPositions.has(`${x},${y},${z}`) && this.matrixMap[x][y][z] === 1) {
+                        console.log("Collided", x, y, z);
+                        return false;
+                    }
+                } catch (error) {
+                    console.log("Movement out of bounds", x, y, z);
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -413,12 +627,11 @@ export class Game {
      * if the resulting rotation is valid (i.e. does not collide with any other cubes or the border of the game board).
      */
     public rotateR(): void {
-        const rotationZ = Math.PI / 2;
         const cubePositions: BABYLON.Vector3[] = calculateTetracubeCubePosition(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, 0));
 
-        if (checkTetracubeRotation(cubePositions, new BABYLON.Vector3(0, 0, rotationZ), this.Tetracube.type)) {
+        if (this.checkR() && checkTetracubeRotation(cubePositions, Matrices.rotationMatrixZ90, this.Tetracube.type)) {
             this.updateMatrixMap(this.Tetracube.getCubes(), 0);
-            rotateTetracube(this.Tetracube.getCubes(), new BABYLON.Vector3(0, 0, rotationZ));
+            rotateTetracube(this.Tetracube.getCubes(), Matrices.rotationMatrixZ90);
         }
         this.updateMatrixMap(this.Tetracube.getCubes(), 1);
     }
@@ -439,7 +652,6 @@ export class Game {
      * - Shift: Increase the game speed
      */
     public keyDown(event: KeyboardEvent): void {
-        // TODO: Fix Tetracube rotation.
         switch (event.key.toLowerCase()) {
             case "g":
                 this.Tetracube.generateTetracube();
