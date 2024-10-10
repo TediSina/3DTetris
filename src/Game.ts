@@ -6,6 +6,7 @@ import { checkTetracubePosition, calculateTetracubeCubePosition } from "./checkT
 import { checkTetracubeRotation, calculateTetracubeCubeRotation } from "./checkTetracubeRotation";
 import { Tetracube } from "./Tetracube";
 import * as Matrices from "./rotationMatrices";
+import * as GUI from "@babylonjs/gui";
 
 
 export class Game {
@@ -14,6 +15,9 @@ export class Game {
     private timeStep = 0;
     private timeCheck = 60;
     private matrixMap: number[][][] = [];
+    private score = 0;
+    private advancedTexture: GUI.AdvancedDynamicTexture;
+    private scoreText: GUI.TextBlock;
 
     /**
      * Constructor for the Game class.
@@ -22,6 +26,16 @@ export class Game {
     constructor(scene: BABYLON.Scene) {
         this.scene = scene;
         this.Tetracube = new Tetracube(this.scene);
+
+        this.advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+        this.scoreText = new GUI.TextBlock();
+        this.scoreText.text = "Score: 0";
+        this.scoreText.color = "white";
+        this.scoreText.fontSize = 24;
+        this.scoreText.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        this.scoreText.textVerticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        this.scoreText.top = "20px";
+        this.advancedTexture.addControl(this.scoreText);
 
         this.initializeMatrixMap(10, 22, 10);
 
@@ -168,6 +182,123 @@ export class Game {
     }
 
     /**
+     * Returns the mesh at the given position in the scene if it exists.
+     * @param targetPosition The position to search for in the scene.
+     * @returns The mesh at the given position if it exists, null otherwise.
+     */
+    public getMeshByPosition(targetPosition: BABYLON.Vector3): BABYLON.AbstractMesh | null {
+        const meshes = this.scene.meshes;
+        
+        for (let i = 0; i < meshes.length; i++) {
+            let mesh = meshes[i];
+
+            if (mesh.position.equals(targetPosition)) {
+                return mesh;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Deletes all meshes in the scene that have a Y position equal to the given rowY
+     * and are inside the matrixMap boundary (within x and z limits).
+     * @param rowY The Y position of the meshes to be deleted.
+     */
+    public deleteMeshesInRow(rowY: number) {
+        const tolerance = 0.001;
+
+        const meshesToRemove = this.scene.meshes.filter(mesh => {
+            const isInRow = Math.abs(mesh.position.y - rowY) < tolerance;
+
+            const isInBoundary = (
+                mesh.position.x >= 0 && mesh.position.x < 10 &&
+                mesh.position.z >= 0 && mesh.position.z < 10
+            );
+
+            return isInRow && isInBoundary;
+        });
+
+        meshesToRemove.forEach(mesh => {
+            mesh.dispose();
+        });
+
+        console.log(`${meshesToRemove.length} meshes were deleted in row ${rowY}`);
+    }
+
+    /**
+     * Moves all cubes above the given row down by one unit.
+     * This function is used when a row is cleared to move all the cubes down to fill the gap.
+     * This function also updates the matrix map to reflect the new positions of the cubes.
+     * @param row The row above which all the cubes are moved down.
+     */
+    public moveCubesDownAboveRow(row: number) {
+        for (let y = row + 1; y < 22; y++) {
+            for (let x = 0; x < 10; x++) {
+                for (let z = 0; z < 10; z++) {
+                    if (this.matrixMap[x][y][z] === 1) {
+                        this.matrixMap[x][y - 1][z] = 1;
+                        this.matrixMap[x][y][z] = 0;
+
+                        let cube = this.getMeshByPosition(new BABYLON.Vector3(x, y, z));
+                        if (cube) {
+                            cube.position.y -= 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Clears the given row in the matrix map by setting all values in the row to 0.
+     * Then, moves all the cubes above the cleared row down by one unit.
+     * This function is used when a row is cleared to fill the gap that is left.
+     * @param y The row to be cleared.
+     */
+    public clearRow(y: number) {
+        this.deleteMeshesInRow(y);
+
+        for (let x = 0; x < this.matrixMap.length; x++) {
+            for (let z = 0; z < this.matrixMap[x].length; z++) {
+                if (this.matrixMap[x][y][z] === 1) {
+                    this.matrixMap[x][y][z] = 0;
+                }
+            }
+        }
+
+        this.moveCubesDownAboveRow(y);
+    }
+
+    /**
+     * Returns a list of all y positions that have a full row in the matrix map.
+     * @returns A list of y positions that have a full row.
+     */
+    public getFullRows(): number[] {
+        let fullRows: number[] = [];
+    
+        for (let y = 0; y < 22; y++) {
+            let isFull = true;
+    
+            for (let x = 0; x < 10; x++) {
+                for (let z = 0; z < 10; z++) {
+                    if (this.matrixMap[x][y][z] === 0) {
+                        isFull = false;
+                        break;
+                    }
+                }
+                if (!isFull) break;
+            }
+    
+            if (isFull) {
+                fullRows.push(y);
+            }
+        }
+    
+        return fullRows;
+    }
+
+    /**
      * Updates the game state once per frame.
      * If the tetracube has reached the bottom of the game board, generates a new tetracube.
      * If the position below the tetracube is valid and the tetracube is not colliding with any other cubes, moves the tetracube down.
@@ -176,6 +307,12 @@ export class Game {
      */
     public update(): void {
         if (this.timeStep >= this.timeCheck) {
+            if (this.getFullRows().length > 0) {
+                for (const row of this.getFullRows()) {
+                    this.clearRow(row);
+                }
+            }
+
             if (this.tetracubeHasReachedBottom()) {
                 this.Tetracube.generateTetracube();
             }
