@@ -15,21 +15,20 @@ export class Game {
     private timeStep = 0;
     private timeCheck = 60;
     private matrixMap: number[][][] = [];
-    private score = 0;
+    public score = 0;
+    public maxScore = 0;
     private advancedTexture: GUI.AdvancedDynamicTexture;
     private scoreText: GUI.TextBlock;
+    public gameIsOver = false;
 
-    /**
-     * Constructor for the Game class.
-     * @param scene The scene in which the game should be rendered.
-     */
-    constructor(scene: BABYLON.Scene) {
+    constructor(scene: BABYLON.Scene, maxScore: number = 0) {
         this.scene = scene;
+        this.maxScore = maxScore;
         this.Tetracube = new Tetracube(this.scene);
 
         this.advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
         this.scoreText = new GUI.TextBlock();
-        this.scoreText.text = "Score: 0";
+        this.scoreText.text = `Score: ${this.score}   Max Score: ${this.maxScore}`;
         this.scoreText.color = "white";
         this.scoreText.fontSize = 24;
         this.scoreText.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
@@ -299,6 +298,15 @@ export class Game {
     }
 
     /**
+     * Adds a given score to the total score and updates the score text.
+     * @param score The score to add to the total score.
+     */
+    public addScore(score: number) {
+        this.score += score;
+        this.scoreText.text = `Score: ${this.score}   Max Score: ${this.maxScore}`;
+    }
+
+    /**
      * Updates the game state once per frame.
      * If the tetracube has reached the bottom of the game board, generates a new tetracube.
      * If the position below the tetracube is valid and the tetracube is not colliding with any other cubes, moves the tetracube down.
@@ -308,6 +316,8 @@ export class Game {
     public update(): void {
         if (this.timeStep >= this.timeCheck) {
             if (this.getFullRows().length > 0) {
+                this.addScore(1000 * this.getFullRows().length);
+
                 for (const row of this.getFullRows()) {
                     this.clearRow(row);
                 }
@@ -321,6 +331,7 @@ export class Game {
 
             if (positionIsValid && !this.cubesHaveCollided()) {
                 this.moveTetracubeDown();
+                this.addScore(1);
             } else {
                 this.Tetracube.generateTetracube();
             }
@@ -787,6 +798,7 @@ export class Game {
      * - E: Rotate the Tetracube one quarter turn clockwise around the Y axis
      * - R: Rotate the Tetracube one quarter turn clockwise around the Z axis
      * - Shift: Increase the game speed
+     * - Escape: End the game
      */
     public keyDown(event: KeyboardEvent): void {
         switch (event.key.toLowerCase()) {
@@ -816,6 +828,11 @@ export class Game {
                 break;
             case "shift":
                 this.timeStep += 10;
+                break;
+            case "escape":
+                this.gameIsOver = true;
+                break;
+            default:
                 break;
         }
     }
