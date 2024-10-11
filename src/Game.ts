@@ -316,7 +316,7 @@ export class Game {
     public update(): void {
         if (this.timeStep >= this.timeCheck) {
             if (this.getFullRows().length > 0) {
-                this.addScore(1000 * this.getFullRows().length);
+                this.addScore(3000 * this.getFullRows().length);
 
                 for (const row of this.getFullRows()) {
                     this.clearRow(row);

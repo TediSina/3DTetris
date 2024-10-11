@@ -61,9 +61,14 @@ class App {
                 const nextScene = new BABYLON.Scene(engine);
                 this.createScene(nextScene);
                 this.scene = nextScene;
+
                 const camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(4.5, 9.5, 4.5), this.scene);
                 camera.setPosition(new BABYLON.Vector3(4.5, 9.5, 35));
                 camera.attachControl(this.canvas, true);
+
+                const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), this.scene);
+                light.intensity = 0.7;
+
                 nextScene.render();
 
                 if (this.Game) {
