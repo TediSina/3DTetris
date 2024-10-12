@@ -348,6 +348,7 @@ export class Game {
             if (this.tetracubeHasReachedBottom()) {
                 if (!this.checkMatrixMap()) {
                     this.gameIsOver = true;
+                    this.update = () => {};
                     return;
                 }
 
@@ -362,6 +363,7 @@ export class Game {
             } else {
                 if (!this.checkMatrixMap()) {
                     this.gameIsOver = true;
+                    this.update = () => {};
                     return;
                 }
 
@@ -837,6 +839,7 @@ export class Game {
             case "g":
                 if (!this.checkMatrixMap()) {
                     this.gameIsOver = true;
+                    this.update = () => {};
                     return;
                 }
                 this.Tetracube.generateTetracube();
@@ -867,6 +870,7 @@ export class Game {
                 break;
             case "escape":
                 this.gameIsOver = true;
+                this.update = () => {};
                 break;
             default:
                 break;
