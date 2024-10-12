@@ -52,7 +52,7 @@ class App {
             if (!this.gameIsOver) {
                 this.scene.render();
 
-                if (this.Game) {
+                if (this.Game && !this.Game.gameIsOver) {
                     this.Game.update();
                 }
             } else {
@@ -71,7 +71,7 @@ class App {
 
                 nextScene.render();
 
-                if (this.Game) {
+                if (this.Game && !this.Game.gameIsOver) {
                     this.Game.update();
                 }
             }
