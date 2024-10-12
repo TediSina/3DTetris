@@ -17,12 +17,16 @@ export class Tetracube {
         this.scene = scene;
     }
 
-
+    /**
+     * Generates a random valid tetracube and positions it at a random location.
+     * The tetracube is picked randomly from the 8 possible tetracubes and a random valid position is generated.
+     * The tetracube is then rotated randomly and placed at the generated position.
+     */
     public generateTetracube(): void {
         const pickedTetracube: [BABYLON.Mesh[], "T" | "I" | "O" | "LJ" | "SZ" | "Tower1" | "Tower2" | "Tower3"] = this.pickRandomTetracube();
         this.cubes = pickedTetracube[0];
         this.type = pickedTetracube[1];
-        // TODO: Take into consideration the current matrix map when generating the new tetracube.
+
         const position = this.generatePosition();
         const rotation = this.generateRotation(position, this.type);
         this.positionTetracube(position);
@@ -40,6 +44,12 @@ export class Tetracube {
         });
     }
 
+    /**
+     * Rotates all the cubes in the tetracube by the given rotation matrix.
+     * The rotation is done relative to the center of the tetracube.
+     * The resulting positions are rounded to the nearest integer.
+     * @param rotationMatrix - The rotation matrix to apply to the tetracube.
+     */
     public rotateTetracube(rotationMatrix: BABYLON.Matrix): void {
         // Find the center of the tetracube
         const center = this.calculateCenter();
@@ -218,6 +228,11 @@ export class Tetracube {
         return cubes;
     }
 
+    /**
+     * Picks a tetracube by type and creates it.
+     * @param tetracube - The type of tetracube to create.
+     * @returns The created tetracube.
+     */
     public pickTetracube(tetracube: string): BABYLON.Mesh[] {
         switch (tetracube) {
             case 'I': return this.createI_Tetracube();

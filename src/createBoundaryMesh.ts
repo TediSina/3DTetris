@@ -15,7 +15,8 @@ import { GridMaterial } from "@babylonjs/materials";
  */
 export function createBoundaryMesh(scene: BABYLON.Scene, width: number, height: number, depth: number, transparencyFaces: number[] = []): BABYLON.Mesh {
     const materials: any[] = [];
-    
+
+    // Create the grid material
     const gridMaterial = new GridMaterial("groundMaterial", scene);
     gridMaterial.majorUnitFrequency = 5;
     gridMaterial.minorUnitVisibility = 0.45;

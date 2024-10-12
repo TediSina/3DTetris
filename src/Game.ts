@@ -307,6 +307,28 @@ export class Game {
     }
 
     /**
+     * Checks if the game should end by checking if there are any cubes in the fourth highest rows.
+     * If there are any cubes in the fourth highest rows, the function returns false.
+     * If there are no cubes in the fourth highest rows, the function returns true.
+     * @returns True if the game should continue, false otherwise.
+     */
+    public checkMatrixMap(): boolean {
+        const height = this.matrixMap[0].length;
+
+        for (let y = height - 4; y < height; y++) {
+            for (let x = 0; x < this.matrixMap.length; x++) {
+                for (let z = 0; z < this.matrixMap[x][y].length; z++) {
+                    if (this.matrixMap[x][y][z] !== 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Updates the game state once per frame.
      * If the tetracube has reached the bottom of the game board, generates a new tetracube.
      * If the position below the tetracube is valid and the tetracube is not colliding with any other cubes, moves the tetracube down.
@@ -324,6 +346,11 @@ export class Game {
             }
 
             if (this.tetracubeHasReachedBottom()) {
+                if (!this.checkMatrixMap()) {
+                    this.gameIsOver = true;
+                    return;
+                }
+
                 this.Tetracube.generateTetracube();
             }
             
@@ -333,6 +360,11 @@ export class Game {
                 this.moveTetracubeDown();
                 this.addScore(1);
             } else {
+                if (!this.checkMatrixMap()) {
+                    this.gameIsOver = true;
+                    return;
+                }
+
                 this.Tetracube.generateTetracube();
             }
 
@@ -803,6 +835,10 @@ export class Game {
     public keyDown(event: KeyboardEvent): void {
         switch (event.key.toLowerCase()) {
             case "g":
+                if (!this.checkMatrixMap()) {
+                    this.gameIsOver = true;
+                    return;
+                }
                 this.Tetracube.generateTetracube();
                 break;
             case "w":
