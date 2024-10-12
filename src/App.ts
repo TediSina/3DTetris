@@ -29,6 +29,10 @@ class App {
 
         window.addEventListener("resize", () => {
             engine.resize();
+
+            if (this.gameIsOver) {
+                this.scene.render();
+            }
         });
 
         window.addEventListener("keydown", (event) => {
