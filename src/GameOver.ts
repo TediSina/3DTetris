@@ -11,7 +11,7 @@ export class GameOver {
     private separator: GUI.Line;
     private fontType: string;
 
-    constructor(finalScore: number, maxScore: number) {
+    constructor(finalScore: number, maxScore: number, isNewMaxScore: boolean) {
         this.guiTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("GameOverUI");
 
         this.fontType = "Courier New";
@@ -76,7 +76,7 @@ export class GameOver {
         this.maxScoreText.shadowColor = "#000000";
         this.guiTexture.addControl(this.maxScoreText);
 
-        if (finalScore === maxScore) {
+        if (finalScore === maxScore && isNewMaxScore) {
             this.maxScoreMessage = new GUI.TextBlock();
             this.maxScoreMessage.text = "New High Score!";
             this.maxScoreMessage.color = "#00FF00";

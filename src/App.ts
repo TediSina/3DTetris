@@ -13,6 +13,7 @@ class App {
     private gameIsOver!: boolean;
     private score = 0;
     private maxScore = 0;
+    private isNewMaxScore = false;
 
     /**
      * Initializes the game engine and the scene.
@@ -96,7 +97,9 @@ class App {
         light.intensity = 0.7;
 
         if (this.gameIsOver) {
-            this.GameOver = new GameOver(this.score, this.maxScore);
+            this.GameOver = new GameOver(this.score, this.maxScore, this.isNewMaxScore);
+
+            engine.stopRenderLoop();
 
             const pointerDown = scene.onPointerObservable.add((pointerInfo) => {
                 if (pointerInfo.type === BABYLON.PointerEventTypes.POINTERDOWN) {
@@ -110,11 +113,43 @@ class App {
                         if (this.Game.gameIsOver) {
                             this.gameIsOver = true;
 
-                            if (this.score < this.Game.score) {
+                            if (this.maxScore < this.Game.score) {
                                 this.maxScore = this.Game.score;
+                                this.isNewMaxScore = true;
+                            } else {
+                                this.isNewMaxScore = false;
                             }
 
                             this.score = this.Game.score;
+                        }
+                    });
+
+                    engine.runRenderLoop(() => {
+                        if (!this.gameIsOver) {
+                            this.scene.render();
+            
+                            if (this.Game && !this.Game.gameIsOver) {
+                                this.Game.update();
+                            }
+                        } else {
+                            this.scene.dispose();
+            
+                            const nextScene = new BABYLON.Scene(engine);
+                            this.createScene(nextScene);
+                            this.scene = nextScene;
+            
+                            const camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 10, new BABYLON.Vector3(4.5, 9.5, 4.5), this.scene);
+                            camera.setPosition(new BABYLON.Vector3(4.5, 9.5, 35));
+                            camera.attachControl(this.canvas, true);
+            
+                            const light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), this.scene);
+                            light.intensity = 0.7;
+            
+                            nextScene.render();
+            
+                            if (this.Game && !this.Game.gameIsOver) {
+                                this.Game.update();
+                            }
                         }
                     });
                 }
@@ -133,8 +168,11 @@ class App {
                         if (this.Game.gameIsOver) {
                             this.gameIsOver = true;
 
-                            if (this.score < this.Game.score) {
+                            if (this.maxScore < this.Game.score) {
                                 this.maxScore = this.Game.score;
+                                this.isNewMaxScore = true;
+                            } else {
+                                this.isNewMaxScore = false;
                             }
 
                             this.score = this.Game.score;
