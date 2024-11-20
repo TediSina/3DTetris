@@ -18,12 +18,16 @@ To set up and run the development server, follow these steps:
 2. **Install Dependencies**
 
     ```bash
-    npm install webpack webpack-cli webpack-dev-server --save-dev
-    npm install @babylonjs/core @babylonjs/materials
-    npm install typescript ts-loader --save-dev
+    npm install
     ```
 
 3. **Start the Development Server**
+
+    ```bash
+    npm run dev
+    ```
+
+    or
 
     ```bash
     npx webpack serve
