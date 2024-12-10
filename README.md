@@ -1,6 +1,6 @@
 # 3D Tetris
 
-3D Tetris powered by Babylon.js (in progress).
+3D Tetris powered by Babylon.js.
 
 ## How to Run the Development Server
 
